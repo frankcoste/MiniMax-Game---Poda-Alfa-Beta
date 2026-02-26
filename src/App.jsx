@@ -169,7 +169,9 @@ export default function AlphaBetaGame() {
     if (solution.prunedNodes.has(nodeId)) return true; 
 
     const userV = parseVal(userInputs[`${nodeId}_${field}`]);
-    const correctV = solution.states[nodeId]?.[field];
+    // En los estados usamos la clave `value` para el valor, mientras que los inputs usan `val`
+    const stateKey = field === 'val' ? 'value' : field;
+    const correctV = solution.states[nodeId]?.[stateKey];
     
     if (userV === null) return false; // Vacío es incorrecto si no está podado
     return userV === correctV;
@@ -233,14 +235,25 @@ export default function AlphaBetaGame() {
     );
   };
 
-  const getInputClass = (isCorrect, isSmall = false) => {
-    let base = `bg-black/60 text-white font-mono text-center border-b-2 outline-none focus:bg-black/80 transition-colors ${isSmall ? 'w-8 text-sm' : 'w-10 text-base'}`;
+  // isSmall: reduce width/size. opts.transparent: use transparent bg + black text (for triangle value input)
+  const getInputClass = (isCorrect, isSmall = false, opts = {}) => {
+    const { transparent = false } = opts;
+    const sizeCls = isSmall ? 'w-8 text-sm' : 'w-10 text-base';
+    let base = `${transparent ? 'bg-transparent text-black' : 'bg-black/60 text-white'} font-mono text-center border-b-2 outline-none ${transparent ? '' : 'focus:bg-black/80'} transition-colors ${sizeCls}`;
+
     if (checkMode) {
-      if (isCorrect === true) base += ' border-green-500 text-green-300';
-      else if (isCorrect === false) base += ' border-red-500 text-red-300';
+      if (isCorrect === true) base += ' border-green-500';
+      else if (isCorrect === false) base += ' border-red-500';
     } else {
       base += ' border-gray-500 focus:border-white';
     }
+
+    // Apply text color feedback only when not using transparent background
+    if (!transparent && checkMode) {
+      if (isCorrect === true) base += ' text-green-300';
+      else if (isCorrect === false) base += ' text-red-300';
+    }
+
     return base;
   };
 
@@ -357,7 +370,7 @@ export default function AlphaBetaGame() {
                   <div xmlns="http://www.w3.org/1999/xhtml" className="w-full h-full flex justify-center items-center">
                     <input 
                       type="text"
-                      className={`w-8 h-6 text-center text-sm font-bold bg-transparent border-b outline-none text-black ${checkMode ? (isInputCorrect(node.id, 'val') ? 'border-green-600' : 'border-red-600') : 'border-black/30 placeholder-black/30'}`}
+                      className={getInputClass(isInputCorrect(node.id, 'val'), true, { transparent: true })}
                       value={formatInputValue(`${node.id}_val`)}
                       onChange={(e) => handleInputChange(node.id, 'val', e.target.value)}
                       placeholder="v"
