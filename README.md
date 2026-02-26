@@ -20,7 +20,7 @@ valores, y marcar manualmente las aristas que se deben podar.
 
 ```bash
 # clona el repositorio
-git clone <URL_DEL_REPOSITORIO>
+git clone (https://github.com/frankcoste/MiniMax-Game---Poda-Alfa-Beta.git)
 cd MinMax
 
 # instala dependencias
@@ -50,19 +50,10 @@ solución.
 
 Incluye comentarios en `src/App.jsx` explicando cada parte.
 
-## Publicación
+## Preview
 
-Para subir al repositorio de GitHub:
+<img width="1847" height="1242" alt="image" src="https://github.com/user-attachments/assets/9bc1ca59-7c47-4700-aa19-79e2813305d1" />
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: alpha-beta game app"
-# crea el repo en GitHub y luego:
-git remote add origin https://github.com/<usuario>/<repo>.git
-git branch -M main
-git push -u origin main
-```
 
 ## Contribuciones
 
